@@ -512,8 +512,8 @@ export default function Dashboard() {
                         <SelectValue placeholder="Select audience" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Women">Women</SelectItem>
-                        <SelectItem value="Girls">Girls</SelectItem>
+                        <SelectItem value="women">Women</SelectItem>
+                        <SelectItem value="girls">Girls</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
