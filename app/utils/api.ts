@@ -1,21 +1,20 @@
 const API_BASE_URL =
   process.env.NEXT_PUBLIC_API_URL ||
   (process.env.NODE_ENV === "production"
-    ? "https://dashboard-backend-5ji4.onrender.com"
+    ? "https://abd-backend-i7fs.vercel.app/"
     : "http://localhost:5000");
 
-export async function apiRequest(
-  endpoint: string,
-  options: RequestInit = {}
-) {
+export async function apiRequest(endpoint: string, options: RequestInit = {}) {
+  if (typeof window === "undefined" && process.env.NODE_ENV === "production") {
+    console.warn(`Skipping API request for ${endpoint} during build`);
+    return null;
+  }
+
   const url = `${API_BASE_URL}${endpoint}`;
 
   try {
-    // ✅ Build headers safely (no undefined)
     const headers: HeadersInit = {
-      ...(options.body instanceof FormData
-        ? {} // Let browser set Content-Type
-        : { "Content-Type": "application/json" }),
+      ...(options.body instanceof FormData ? {} : { "Content-Type": "application/json" }),
       ...(options.headers || {}),
     };
 
@@ -38,7 +37,7 @@ export async function apiRequest(
     return await res.json();
   } catch (error) {
     console.error(`❌ API Error [${endpoint}]:`, error);
-    throw error;
+    return null;
   }
 }
 

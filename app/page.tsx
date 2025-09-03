@@ -97,25 +97,32 @@ export default function HomePage() {
 
 
   // Fetch products and filter by gender
-  useEffect(() => {
+ useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const data = await apiRequest("/api/products", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        })
-        console.log("Fetched products:", data)
+        const data = await apiRequest("/api/products");
+        // const data = await res.json();
 
-        setWomenProducts(data.filter((p: any) => p.gender?.toLowerCase() === "women"))
-        setGirlsProducts(data.filter((p: any) => p.gender?.toLowerCase() === "girls"))
-      } catch (error) {
-        console.error("Failed to fetch products:", error)
+        console.log(data);
+        if (Array.isArray(data)) {
+          setWomenProducts(
+            data.filter((p: any) => p.gender?.toLowerCase() === "women")
+          );
+          setGirlsProducts(
+            data.filter((p: any) => p.gender?.toLowerCase() === "girls")
+          );
+        } else {
+          console.error("API did not return an array:", data);
+        }
+      } catch (err) {
+        console.error("Error fetching products:", err);
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
-    fetchProducts()
-  }, [])
+    };
+
+    fetchProducts();
+  }, []);
   const renderProductCard = (product: any) => (
     <Card
       key={product._id}
@@ -173,6 +180,7 @@ export default function HomePage() {
       </Link>
     </Card>
   )
+
 
   useEffect(() => {
     if (!isAutoPlaying) return
